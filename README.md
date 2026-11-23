@@ -1,6 +1,6 @@
 # Skills
 
-Shared agent skills for code style, TypeScript, debugging, design, and writing. Each skill starts at its own `SKILL.md` and links to detailed references.
+Shared agent skills for code style (including TypeScript), debugging, design, writing, and creating new skills. Each skill starts at its own `SKILL.md` and links to detailed references.
 
 Keep the checkout at a stable path. To link all skills and the shared `AGENTS.md` into Codex and Claude Code, run this from the repository root:
 
