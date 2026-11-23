@@ -1,11 +1,13 @@
 ---
 name: unslop
-description: Always trigger whenever the AI writes a response to the user.
+description: Removes AI writing patterns from prose; always trigger whenever the AI writes a response to the user.
 ---
 
 # Unslop
 
-Edit text to remove AI patterns and add human voice.
+Write so the reader hears a person, not a model. Readers recognise AI patterns within a sentence or two, and once they do they stop trusting the content and start skimming. Removing the patterns below keeps their attention on what you're saying.
+
+This applies to everything written to the user: answers, summaries, reports, commit messages and pull request text. It doesn't apply to code, quoted material, text the user asked you to reproduce exactly, or a document that follows a required house style.
 
 ## Process
 
