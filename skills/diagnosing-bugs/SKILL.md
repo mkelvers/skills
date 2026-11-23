@@ -1,48 +1,58 @@
 ---
 name: diagnosing-bugs
-description: Diagnoses bugs by building a pass/fail feedback loop before theorizing. Use when the user reports something broken, throwing errors, failing, flaky, or slow, or asks to debug or diagnose an issue.
+description: Diagnoses bugs by building a failing check before theorising; use when something is broken, erroring, failing, flaky or slow, or the user asks to debug.
 ---
 
 # Diagnosing bugs
 
-The feedback loop is the skill. With a fast, deterministic command that goes red on this exact bug, you will find the cause. Without one, reading code will not save you. Read `CONTEXT.md` and any ADRs for the area first. Skip a phase only with a stated reason.
+Find the cause by first building a command that fails on this exact bug, then using it to test one idea at a time. With a fast, reliable signal you will find the cause. Without one, reading code and guessing tends to produce a plausible story and a fix that doesn't hold.
 
-Redact every secret as `<REDACTED>` before showing commands, output, or captured artifacts. Keep credentials in env vars, and quote only the lines of a captured request that carry the signal. If redacted output is not enough to diagnose, say so and ask.
+Before starting, read the project's context notes (`CONTEXT.md`, architecture decision records) for the area. Skip a phase below only when you can say why it doesn't apply.
+
+Redact secrets as `<REDACTED>` in every command, output and captured artifact you show. Keep credentials in environment variables, and quote only the lines of a captured request that carry the signal. If the redacted output isn't enough to diagnose, say so and ask.
 
 ## 1. Build the loop
 
 Pick the cheapest signal that reaches the bug:
 
-1. A failing test at the seam that reaches it.
+1. A failing test at the point in the code where the bug shows up.
 2. A curl or HTTP script against the dev server.
-3. A CLI run on a fixture, diffed against a known-good snapshot.
-4. A Playwright script that asserts on DOM, console, or network.
+3. A CLI run on a fixture, diffed against known-good output.
+4. A browser script that asserts on the DOM, console or network.
 5. A captured request or event log, replayed through the code path.
-6. A throwaway harness that calls the suspect function with mocked dependencies.
-7. A fuzz loop of 1000 random inputs, for "sometimes wrong output".
-8. A `git bisect run` script or old-vs-new diff, when the bug appeared between two known states.
-9. Last resort: a script that drives the user through the manual steps, `scripts/hitl-loop.template.sh`.
+6. A small harness that calls the suspect function with stubbed dependencies.
+7. A fuzz loop over many random inputs, for "sometimes the output is wrong".
+8. A `git bisect run` script, when the bug appeared between two known versions.
+9. Last resort: a script that walks the user through manual steps, [scripts/hitl-loop.template.sh](scripts/hitl-loop.template.sh).
 
-Then tighten it: faster (narrow scope, cache setup), sharper (assert the specific symptom, not "didn't crash"), more deterministic (pin time, seed RNG, freeze network). For a non-deterministic bug, raise the reproduction rate instead of chasing a clean repro. Loop the trigger 100 times, add stress, narrow timing windows. A 50% flake is debuggable, 1% is not.
+Then improve it. Make it faster by narrowing scope and caching setup. Make it sharper by asserting the user's specific symptom, not "didn't crash". Make it deterministic by pinning time, seeding randomness and freezing the network. For a bug that only happens sometimes, raise the reproduction rate instead of waiting for a clean repro: run the trigger a hundred times, add load, narrow timing windows. A bug that fails half the time can be debugged; one that fails once in a hundred can't.
 
-This phase is done when one command that you have already run (show it, redacted) is red-capable (asserts the user's exact symptom), deterministic, fast, and runnable unattended. If you are reading code to build a theory before that command exists, stop. If you cannot build a loop, list what you tried and ask for access to a reproducing environment, a redacted artifact (HAR, log, core dump), or permission to add temporary production instrumentation. Do not hypothesize without one.
+The phase is done when you have run one command (show it, redacted) that asserts the user's exact symptom, gives the same answer every time, runs fast, and needs nobody watching. If you notice yourself reading code to build a theory before that command exists, stop and finish the loop.
 
-## 2. Reproduce and minimise
+If you can't build one, list what you tried and ask for access to an environment that reproduces it, a redacted artifact (HAR file, log, core dump), or permission to add temporary instrumentation in production. Don't move on to theories without a loop.
 
-Run the loop and confirm it shows the user's failure, not a nearby one. Then cut inputs, callers, config, and steps one at a time, rerunning after each cut. Stop when removing any remaining element turns the loop green.
+## 2. Reproduce and reduce
+
+Run the loop and confirm it shows the user's failure, not a different one nearby. Then remove inputs, callers, configuration and steps one at a time, rerunning after each. Stop when removing anything else makes the loop pass. The smaller the case, the fewer places the cause can hide.
 
 ## 3. Hypothesise
 
-Write 3 to 5 ranked hypotheses before testing any. Each states a prediction: "if X is the cause, changing Y makes the bug disappear." A hypothesis with no prediction gets sharpened or dropped. Show the list to the user before testing, since they may know a recent deploy or a ruled-out cause. Proceed on your ranking if they are away.
+Write three to five ranked hypotheses before testing any. Each makes a prediction: "if X is the cause, changing Y makes the bug disappear." A hypothesis without a prediction can't be tested; sharpen it or drop it. Show the list to the user before testing, since they may know about a recent deploy or something already ruled out. If they're away, go ahead in your order.
 
 ## 4. Instrument
 
-Each probe maps to one prediction, and you change one variable at a time. Prefer a debugger or REPL over logs, and targeted logs over "log everything and grep". Prefix every debug log with a unique tag such as `[DEBUG-a4f2]` so cleanup is one grep. For performance regressions, measure a baseline (timing harness, profiler, query plan) and bisect, because logs mislead there.
+Make each probe test one prediction, and change one thing at a time, so a result points at one cause. Prefer a debugger or REPL to logs, and targeted logs to logging everything. Prefix every debug log with a unique tag such as `[DEBUG-a4f2]`, so removing them later is a single search. For performance problems, measure a baseline first (a timing harness, a profiler, a query plan) and bisect against it; logs mislead there.
 
-## 5. Fix and lock it down
+## 5. Fix and lock it in
 
-Write the regression test before the fix, but only at a seam that exercises the real bug pattern at the call site. A single-caller unit test for a multi-caller bug gives false confidence. If no correct seam exists, that is a finding. Report it, because the architecture is preventing the bug from being locked down. With a seam: turn the minimised repro into a failing test, watch it fail, fix, watch it pass, then rerun the phase 1 loop on the original scenario.
+Write the regression test before the fix, at a point in the code that exercises the real bug the way callers hit it. A test of one caller doesn't protect against a bug with several. If no such point exists, report that as a finding: the design is preventing the bug from being locked down.
+
+When there is one, turn the reduced case into a failing test, watch it fail, fix the code, watch it pass, then rerun the original loop from phase 1.
 
 ## 6. Clean up
 
-Grep for the debug tag and remove every hit. Delete throwaway prototypes. State the confirmed cause in the commit or PR message.
+Search for the debug tag and remove every hit. Delete throwaway harnesses. State the confirmed cause in the commit or pull request message.
+
+## When not to use this
+
+A typo, a failing type check with an obvious message, or a bug whose cause is already stated in the error doesn't need a loop. Fix it, and confirm with the check that reported it.
