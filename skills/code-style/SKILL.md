@@ -1,6 +1,6 @@
 ---
 name: code-style
-description: Applies the user's code style; use whenever writing, editing, reviewing or testing code, or writing code documentation, in any codebase.
+description: Applies the user's code style and TypeScript practices; use whenever writing, editing, reviewing or testing code, or writing code documentation, in any codebase.
 ---
 
 # Code style
@@ -25,7 +25,11 @@ The question to ask of every change: *would someone new to this codebase underst
 
 **Errors.** Never drop an error and never invent data to cover a gap. Both let the program carry on in a wrong state and hide the cause. Details in [errors.md](references/errors.md).
 
+**Comments.** Document what a caller can't see from the signature: assumptions, side effects, failure modes, units, lifecycle. A comment inside code explains *why* a non-obvious decision exists. Don't narrate what the code already says, and don't leave comments explaining a lint fix; both go stale and teach the reader to skip comments.
+
 **Markup.** Use the element that means the thing, and keep styling on the element or in the component's variants. Details in [markup.md](references/markup.md).
+
+**TypeScript.** Check data from outside at the boundary and derive its type from the schema; let the compiler see evidence instead of asserting; model states as discriminated unions. Details in [typescript.md](references/typescript.md). For a repository-wide audit or cleanup, read [typescript-audit.md](references/typescript-audit.md).
 
 ## Lint and type errors
 
@@ -55,5 +59,6 @@ In projects the user owns (one you start together, one under their own account, 
 - No helper exists only to be called once; no class exists only to hold static functions.
 - Every error is handled or propagated; no placeholder data.
 - Any suppression is one rule, one line, with a reason the user would accept.
+- In TypeScript, every external value passes a check before the code relies on its shape.
 
-For TypeScript types, errors and documentation, also use the [TypeScript skill](../typescript/SKILL.md). For visual design, use the design skill.
+For visual design, use the design skill. For a bug whose cause isn't obvious, use the diagnosing-bugs skill.
