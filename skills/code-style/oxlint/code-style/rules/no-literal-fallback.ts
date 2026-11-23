@@ -1,7 +1,7 @@
 import { defineRule } from "@oxlint/plugins";
 
 /**
- * §8 Missing data isn't hidden behind placeholder text such as
+ * [errors] Missing data isn't hidden behind placeholder text such as
  * `title ?? "Unknown"`. Only text that says something is missing counts:
  * defaults such as `sort ?? "trending"` are fine.
  */
@@ -17,7 +17,7 @@ export const noLiteralFallback = defineRule({
 			if (node.operator === "??" && placeholder) {
 				context.report({
 					message:
-						"Don't hide missing data behind placeholder text; throw, or default it in the schema (code-style §8).",
+						"Don't hide missing data behind placeholder text; throw, or default it in the schema (code-style: errors).",
 					node: right,
 				});
 			}
@@ -25,7 +25,7 @@ export const noLiteralFallback = defineRule({
 	}),
 	meta: {
 		docs: {
-			description: "§8 No placeholder text for missing data.",
+			description: "[errors] No placeholder text for missing data.",
 		},
 	},
 });

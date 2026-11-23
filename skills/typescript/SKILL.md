@@ -21,7 +21,7 @@ Write the smallest clear design that models the domain, enforces its invariants,
 
 Treat SOLID, DRY, YAGNI, KISS, and separation of concerns as questions that expose trade-offs, not as a score. Citing a principle doesn't justify a refactor. Remove duplicated knowledge (the same rule in two places), not code that merely looks similar. Delete speculative options and abstractions for hypothetical consumers. Fewer lines is not simpler, and indirection is not architecture.
 
-Prefer checked assignments, inference, and narrowing. Where project policy allows, a localized assertion may express an independently established invariant the compiler cannot see. An assertion does no runtime validation. Follow stricter local rules, including Sora's assertion ban.
+Prefer checked assignments, inference, and narrowing. Where project policy allows, a localized assertion may express an independently established invariant the compiler cannot see. An assertion does no runtime validation. Follow stricter local rules, including a project-wide assertion ban.
 
 ## References
 

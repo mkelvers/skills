@@ -45,7 +45,7 @@ class Place {
 }
 
 /**
- * §6 Values and functions don't repeat their folder or file name. Types and
+ * [naming] Values and functions don't repeat their folder or file name. Types and
  * classes keep it, since no owner carries their context where they are used.
  */
 export const nameContext = defineRule({
@@ -57,7 +57,7 @@ export const nameContext = defineRule({
 
 			if (repeated) {
 				context.report({
-					message: `"${name}" repeats "${repeated}", which its folder or file already says (code-style §6).`,
+					message: `"${name}" repeats "${repeated}", which its folder or file already says (code-style: naming).`,
 					node,
 				});
 			}
@@ -67,7 +67,7 @@ export const nameContext = defineRule({
 	},
 	meta: {
 		docs: {
-			description: "§6 Values and functions don't repeat their folder or file name.",
+			description: "[naming] Values and functions don't repeat their folder or file name.",
 		},
 	},
 });

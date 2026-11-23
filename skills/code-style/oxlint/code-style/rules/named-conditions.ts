@@ -21,13 +21,13 @@ class Condition {
 	}
 }
 
-/** §2 Conditions that join more than two operands get a name. */
+/** [formatting] Conditions that join more than two operands get a name. */
 export const namedConditions = defineRule({
 	create: (context) => {
 		const check = (node: ESTree.DoWhileStatement | ESTree.IfStatement | ESTree.WhileStatement) => {
 			if (new Condition(node.test).operands > 2) {
 				context.report({
-					message: "Give this compound condition a name with a const (code-style §2).",
+					message: "Give this compound condition a name with a const (code-style: formatting).",
 					node: node.test,
 				});
 			}
@@ -41,7 +41,7 @@ export const namedConditions = defineRule({
 	},
 	meta: {
 		docs: {
-			description: "§2 Conditions that join more than two operands get a name.",
+			description: "[formatting] Conditions that join more than two operands get a name.",
 		},
 	},
 });

@@ -74,7 +74,7 @@ class Wording {
 	}
 }
 
-/** §6 No abbreviations, filler suffixes, or `handle…` names. */
+/** [naming] No abbreviations, filler suffixes, or `handle…` names. */
 export const nameWords = defineRule({
 	create: (context) => {
 		const hooks = path.basename(context.filename).startsWith("hooks.");
@@ -85,7 +85,7 @@ export const nameWords = defineRule({
 
 			if (banned && !framework) {
 				context.report({
-					message: `"${name}" uses "${banned}"; name what it is instead (code-style §6).`,
+					message: `"${name}" uses "${banned}"; name what it is instead (code-style: naming).`,
 					node,
 				});
 			}
@@ -96,7 +96,7 @@ export const nameWords = defineRule({
 	meta: {
 		docs: {
 			description:
-				"§6 No abbreviations, filler suffixes, or handle- names. SvelteKit's hooks files keep the handle names it requires.",
+				"[naming] No abbreviations, filler suffixes, or handle- names. SvelteKit's hooks files keep the handle names it requires.",
 		},
 	},
 });

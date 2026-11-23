@@ -1,7 +1,7 @@
 import { defineRule } from "@oxlint/plugins";
 import type { ESTree } from "@oxlint/plugins";
 
-/** §4 No module-level `let` or `var`. Svelte components are exempt: their `let` is per-instance state. */
+/** [structure] No module-level `let` or `var`. Svelte components are exempt: their `let` is per-instance state. */
 export const noModuleLet = defineRule({
 	create: (context) => {
 		if (context.filename.endsWith(".svelte")) {
@@ -11,7 +11,8 @@ export const noModuleLet = defineRule({
 		const check = (node: ESTree.VariableDeclaration) => {
 			if (node.kind === "let" || node.kind === "var") {
 				context.report({
-					message: "Module-level state belongs in a class with private fields (code-style §4).",
+					message:
+						"Module-level state belongs in a class with private fields (code-style: structure).",
 					node,
 				});
 			}
@@ -24,7 +25,7 @@ export const noModuleLet = defineRule({
 	},
 	meta: {
 		docs: {
-			description: "§4 No module-level let or var.",
+			description: "[structure] No module-level let or var.",
 		},
 	},
 });

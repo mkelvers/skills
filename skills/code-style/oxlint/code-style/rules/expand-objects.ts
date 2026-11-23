@@ -53,7 +53,7 @@ class Members {
 }
 
 /**
- * §7 Object literals and types with several members put each on its own
+ * [formatting] Object literals and types with several members put each on its own
  * line, except a parameter's inline type, which the formatter collapses. The fix breaks the line after the opening brace; the formatter then
  * expands the rest.
  */
@@ -67,7 +67,8 @@ export const expandObjects = defineRule({
 			const [brace] = node.range;
 			context.report({
 				fix: (fixer) => fixer.insertTextAfterRange([brace, brace + 1], "\n"),
-				message: "Put each property on its own line when there is more than one (code-style §7).",
+				message:
+					"Put each property on its own line when there is more than one (code-style: formatting).",
 				node,
 			});
 		};
@@ -80,7 +81,7 @@ export const expandObjects = defineRule({
 	},
 	meta: {
 		docs: {
-			description: "§7 Object literals and types with several members go one per line.",
+			description: "[formatting] Object literals and types with several members go one per line.",
 		},
 		fixable: "code",
 	},

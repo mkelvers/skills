@@ -34,7 +34,7 @@ class Handler {
 	}
 }
 
-/** §8 No error handler drops the error. */
+/** [errors] No error handler drops the error. */
 export const noSwallowedErrors = defineRule({
 	create: (context) => ({
 		CallExpression: (node) => {
@@ -52,7 +52,8 @@ export const noSwallowedErrors = defineRule({
 
 			if (catches && swallows) {
 				context.report({
-					message: "This .catch drops the error; handle it or let it propagate (code-style §8).",
+					message:
+						"This .catch drops the error; handle it or let it propagate (code-style: errors).",
 					node: callback,
 				});
 			}
@@ -60,7 +61,8 @@ export const noSwallowedErrors = defineRule({
 		CatchClause: (node) => {
 			if (new Handler(node.body).swallows) {
 				context.report({
-					message: "This catch drops the error; handle it or let it propagate (code-style §8).",
+					message:
+						"This catch drops the error; handle it or let it propagate (code-style: errors).",
 					node,
 				});
 			}
@@ -68,7 +70,7 @@ export const noSwallowedErrors = defineRule({
 	}),
 	meta: {
 		docs: {
-			description: "§8 No error handler drops the error.",
+			description: "[errors] No error handler drops the error.",
 		},
 	},
 });

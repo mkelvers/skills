@@ -1,6 +1,6 @@
 /**
  * Oxlint rules for the code-style skill, one rule per file in `rules/`. Each
- * rule names the section of the skill it enforces.
+ * rule names the reference file in `references/` that explains it.
  *
  * The original lives in the skill at `~/.config/agents/skills/code-style/oxlint/`.
  * Change rules there and copy the folder into each repo.

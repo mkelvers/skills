@@ -106,7 +106,7 @@ class Definition {
 }
 
 /**
- * §5 No function only forwards its arguments to another call. Calls on the
+ * [structure] No function only forwards its arguments to another call. Calls on the
  * instance's own state or on a literal are exempt: they expose or name it.
  */
 export const noWrappers = defineRule({
@@ -115,7 +115,7 @@ export const noWrappers = defineRule({
 			if (new Definition(node).forwards) {
 				context.report({
 					message:
-						"This function only forwards to another call; call that directly (code-style §5).",
+						"This function only forwards to another call; call that directly (code-style: structure).",
 					node,
 				});
 			}
@@ -129,7 +129,7 @@ export const noWrappers = defineRule({
 	},
 	meta: {
 		docs: {
-			description: "§5 No function only forwards its arguments to another call.",
+			description: "[structure] No function only forwards its arguments to another call.",
 		},
 	},
 });

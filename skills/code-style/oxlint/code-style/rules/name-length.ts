@@ -2,7 +2,7 @@ import { defineRule } from "@oxlint/plugins";
 
 import { Declarations } from "../shared/declarations.ts";
 
-/** §6 Names have at most three words. */
+/** [naming] Names have at most three words. */
 export const nameLength = defineRule({
 	create: (context) => {
 		const declarations = new Declarations((node, name) => {
@@ -10,7 +10,7 @@ export const nameLength = defineRule({
 
 			if (length > 3) {
 				context.report({
-					message: `"${name}" has ${length} words; use at most 3 (code-style §6).`,
+					message: `"${name}" has ${length} words; use at most 3 (code-style: naming).`,
 					node,
 				});
 			}
@@ -20,7 +20,7 @@ export const nameLength = defineRule({
 	},
 	meta: {
 		docs: {
-			description: "§6 Names have at most three words.",
+			description: "[naming] Names have at most three words.",
 		},
 	},
 });
