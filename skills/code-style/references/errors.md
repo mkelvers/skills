@@ -9,9 +9,9 @@ A handler that does nothing, only logs, or returns a placeholder is not handling
 ```ts
 // ❌ The write failed; the caller thinks it succeeded.
 try {
-	await orders.save(order);
+  await orders.save(order);
 } catch (error) {
-	console.error(error);
+  console.error(error);
 }
 
 // ❌ Every failure, including bugs, becomes "no thumbnail".
@@ -24,13 +24,13 @@ await orders.save(order);
 
 // ✅ Catch the failure you expect, handle it on purpose, and let the rest through.
 try {
-	return await resize(image);
+  return await resize(image);
 } catch (error) {
-	if (error instanceof UnsupportedFormatError) {
-		return image;
-	}
+  if (error instanceof UnsupportedFormatError) {
+    return image;
+  }
 
-	throw error;
+  throw error;
 }
 ```
 
@@ -49,7 +49,7 @@ const year = book.year || 0;
 ```ts
 // ✅ Fail where the gap is found, with enough detail to trace it.
 if (!book.title) {
-	throw new Error(`Book ${book.id} has no title`);
+  throw new Error(`Book ${book.id} has no title`);
 }
 ```
 

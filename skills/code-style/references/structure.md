@@ -25,45 +25,45 @@ The signal is the same value being passed around, not the number of functions.
 ```ts
 // ❌ Three loose functions threading the same string; nothing names what it is.
 function words(name: string) {
-	return name.split(/(?=[A-Z])/u).map((word) => word.toLowerCase());
+  return name.split(/(?=[A-Z])/u).map((word) => word.toLowerCase());
 }
 
 function lastWord(name: string) {
-	return words(name).at(-1);
+  return words(name).at(-1);
 }
 
 function startsWith(name: string, prefix: string) {
-	return words(name)[0] === prefix;
+  return words(name)[0] === prefix;
 }
 ```
 
 ```ts
 // ✅ One concept, one place: everything you can ask of an identifier.
 class Identifier {
-	readonly #text: string;
+  readonly #text: string;
 
-	constructor(text: string) {
-		this.#text = text;
-	}
+  constructor(text: string) {
+    this.#text = text;
+  }
 
-	get words(): string[] {
-		return this.#text.split(/(?=[A-Z])/u).map((word) => word.toLowerCase());
-	}
+  get words(): string[] {
+    return this.#text.split(/(?=[A-Z])/u).map((word) => word.toLowerCase());
+  }
 
-	get last(): string | undefined {
-		return this.words.at(-1);
-	}
+  get last(): string | undefined {
+    return this.words.at(-1);
+  }
 
-	startsWith(prefix: string): boolean {
-		return this.words[0] === prefix;
-	}
+  startsWith(prefix: string): boolean {
+    return this.words[0] === prefix;
+  }
 }
 ```
 
 ```ts
 // ✅ Equally right: one stateless operation stays a function.
 export function cents(amount: number): string {
-	return `${(amount / 100).toFixed(2)} €`;
+  return `${(amount / 100).toFixed(2)} €`;
 }
 ```
 
@@ -78,11 +78,11 @@ Two failure modes sit on either side. **Function sprawl** is dozens of small mod
 
   ```ts
   export class Manifest {
-      private constructor(private readonly entries: readonly Entry[]) {}
+    private constructor(private readonly entries: readonly Entry[]) {}
 
-      static async load(path: string): Promise<Manifest> {
-          return new Manifest(await readEntries(path));
-      }
+    static async load(path: string): Promise<Manifest> {
+      return new Manifest(await readEntries(path));
+    }
   }
   ```
 
@@ -101,20 +101,20 @@ A separate helper costs the reader a jump away and back. It has to pay for that.
 ```ts
 // ❌ A one-line helper with one caller, in a place of its own.
 function slug(title: string): string {
-	return title.trim().toLowerCase().replaceAll(/\s+/gu, "-");
+  return title.trim().toLowerCase().replaceAll(/\s+/gu, "-");
 }
 
 export function articlePath(article: Article): string {
-	return `/articles/${slug(article.title)}`;
+  return `/articles/${slug(article.title)}`;
 }
 ```
 
 ```ts
 // ✅ The step is named where it happens.
 export function articlePath(article: Article): string {
-	const slug = article.title.trim().toLowerCase().replaceAll(/\s+/gu, "-");
+  const slug = article.title.trim().toLowerCase().replaceAll(/\s+/gu, "-");
 
-	return `/articles/${slug}`;
+  return `/articles/${slug}`;
 }
 ```
 
@@ -129,18 +129,18 @@ Give mutable state an owner: an instance, a closure, or a store the framework pr
 let current: Session | undefined;
 
 export function signIn(session: Session) {
-	current = session;
+  current = session;
 }
 ```
 
 ```ts
 // ✅ Each owner has its own.
 export class Sessions {
-	#current: Session | undefined;
+  #current: Session | undefined;
 
-	signIn(session: Session) {
-		this.#current = session;
-	}
+  signIn(session: Session) {
+    this.#current = session;
+  }
 }
 ```
 
@@ -159,7 +159,7 @@ Don't write a function whose whole body forwards its arguments to another call. 
 ```ts
 // ❌ Callers could call fetchOrder directly.
 export function getOrder(id: string) {
-	return fetchOrder(http, id);
+  return fetchOrder(http, id);
 }
 ```
 

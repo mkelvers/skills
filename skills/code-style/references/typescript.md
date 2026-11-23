@@ -11,21 +11,21 @@ Types don't exist at runtime, so they can't check a request body, an API respons
 ```ts
 // ❌ The same shape declared twice; nothing keeps them in step.
 interface NewOrder {
-	sku: string;
-	quantity: number;
+  sku: string;
+  quantity: number;
 }
 
 const NewOrderSchema = z.object({
-	sku: z.string().min(1),
-	quantity: z.number().int().positive(),
+  sku: z.string().min(1),
+  quantity: z.number().int().positive(),
 });
 ```
 
 ```ts
 // ✅ One schema; the type follows it.
 export const NewOrderSchema = z.object({
-	sku: z.string().min(1),
-	quantity: z.number().int().positive(),
+  sku: z.string().min(1),
+  quantity: z.number().int().positive(),
 });
 
 export type NewOrder = z.infer<typeof NewOrderSchema>;
@@ -62,23 +62,23 @@ When a value can be in several states, give each state its own shape and a field
 ```ts
 // ❌ Every combination is representable, including ok: true with a reason.
 interface ImportResult {
-	ok: boolean;
-	imported?: number;
-	reason?: string;
+  ok: boolean;
+  imported?: number;
+  reason?: string;
 }
 ```
 
 ```ts
 // ✅ Two states, each with exactly its own data.
 type ImportResult =
-	| {
-			ok: true;
-			imported: number;
-	  }
-	| {
-			ok: false;
-			reason: "unsupported-format" | "invalid-data";
-	  };
+  | {
+      ok: true;
+      imported: number;
+    }
+  | {
+      ok: false;
+      reason: "unsupported-format" | "invalid-data";
+    };
 ```
 
 Switch over the discriminant and end with an exhaustiveness check (`const unreachable: never = result`), so adding a state later fails to compile everywhere it isn't handled.
@@ -90,16 +90,16 @@ A type parameter should carry a real relationship: what goes in determines what 
 ```ts
 // ✅ The item type flows from input to output.
 export function chunk<T>(values: readonly T[], size: number): T[][] {
-	// ...
+  // ...
 }
 ```
 
 ```ts
 // ❌ The parameter adds nothing a plain type wouldn't.
 export function wrap<T>(value: T) {
-	return {
-		value,
-	};
+  return {
+    value,
+  };
 }
 ```
 
@@ -126,10 +126,10 @@ throw new Error("NOT_FOUND");
 ```ts
 // ✅ A class callers can catch by type, carrying the detail they need.
 export class OrderNotFoundError extends Error {
-	constructor(readonly id: string) {
-		super(`Order ${id} does not exist`);
-		this.name = "OrderNotFoundError";
-	}
+  constructor(readonly id: string) {
+    super(`Order ${id} does not exist`);
+    this.name = "OrderNotFoundError";
+  }
 }
 ```
 

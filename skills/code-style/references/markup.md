@@ -24,7 +24,7 @@ With Tailwind and similar, the classes on an element are its style sheet. Keep t
 ```svelte
 <!-- ❌ The base style lives in a constant, and the variants in a chain of conditions. -->
 <script>
-	const base = "inline-flex items-center px-3";
+  const base = "inline-flex items-center px-3";
 </script>
 
 <button class={cn(base, variant === "ghost" && "bg-transparent", variant === "primary" && "bg-accent")}>
@@ -33,14 +33,14 @@ With Tailwind and similar, the classes on an element are its style sheet. Keep t
 ```svelte
 <!-- ✅ One declaration lists every variant; the element asks for one. -->
 <script module>
-	export const button = cva("inline-flex items-center px-3", {
-		variants: {
-			variant: {
-				ghost: "bg-transparent",
-				primary: "bg-accent",
-			},
-		},
-	});
+  export const button = cva("inline-flex items-center px-3", {
+    variants: {
+      variant: {
+        ghost: "bg-transparent",
+        primary: "bg-accent",
+      },
+    },
+  });
 </script>
 
 <button class={cn(button({ variant }), className)}>

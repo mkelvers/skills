@@ -19,21 +19,21 @@ type Result = { ok: true; value: number } | { ok: false; error: Error };
 ```ts
 // ✅ One field per line.
 const options = {
-	retries: 2,
-	timeoutMs: 500,
-	signal,
+  retries: 2,
+  timeoutMs: 500,
+  signal,
 };
 
 // ✅ Each variant is a block; comparing them is comparing two short columns.
 type Result =
-	| {
-			ok: true;
-			value: number;
-	  }
-	| {
-			ok: false;
-			error: Error;
-	  };
+  | {
+      ok: true;
+      value: number;
+    }
+  | {
+      ok: false;
+      error: Error;
+    };
 ```
 
 Leave alone what the formatter owns and keeps collapsing, such as destructuring in a parameter list or `for (const { id } of rows)`. Fighting the formatter only produces churn. Some formatters keep an object expanded once you expand it but never expand one themselves (Prettier and oxfmt with `objectWrap: "preserve"`), so write it expanded the first time.
@@ -47,29 +47,29 @@ The blank line is the paragraph break. Without it the reader has to read every l
 ```ts
 // ❌ Lookup, guard, work and result in one block.
 async function publish(id: string) {
-	const draft = await drafts.get(id);
-	if (!draft) {
-		return null;
-	}
-	const page = render(draft);
-	await pages.save(page);
-	return page.url;
+  const draft = await drafts.get(id);
+  if (!draft) {
+    return null;
+  }
+  const page = render(draft);
+  await pages.save(page);
+  return page.url;
 }
 ```
 
 ```ts
 // ✅ Four steps, four paragraphs.
 async function publish(id: string) {
-	const draft = await drafts.get(id);
+  const draft = await drafts.get(id);
 
-	if (!draft) {
-		return null;
-	}
+  if (!draft) {
+    return null;
+  }
 
-	const page = render(draft);
-	await pages.save(page);
+  const page = render(draft);
+  await pages.save(page);
 
-	return page.url;
+  return page.url;
 }
 ```
 
@@ -80,26 +80,26 @@ Handle the exceptional case first and return, so the main path runs at the left 
 ```ts
 // ❌ Three conditions, three levels; the work is buried at the bottom right.
 for (const order of orders) {
-	if (order.paid) {
-		if (order.address) {
-			if (!shipped.has(order.id)) {
-				queue.push(order);
-			}
-		}
-	}
+  if (order.paid) {
+    if (order.address) {
+      if (!shipped.has(order.id)) {
+        queue.push(order);
+      }
+    }
+  }
 }
 ```
 
 ```ts
 // ✅ Skip what doesn't qualify, then do the work at the top level.
 for (const order of orders) {
-	const ready = order.paid && order.address;
+  const ready = order.paid && order.address;
 
-	if (!ready || shipped.has(order.id)) {
-		continue;
-	}
+  if (!ready || shipped.has(order.id)) {
+    continue;
+  }
 
-	queue.push(order);
+  queue.push(order);
 }
 ```
 
@@ -125,9 +125,9 @@ const label = active ? "Active" : "Inactive";
 
 // ✅ Work goes in branches.
 if (playing) {
-	player.pause();
+  player.pause();
 } else {
-	player.play();
+  player.play();
 }
 ```
 
@@ -142,7 +142,7 @@ When an `if` or `while` joins more than two operands with `&&` or `||`, give the
 ```ts
 // ❌ The reader has to work out what four checks add up to.
 if (user && user.verified && !user.banned && plan !== "free") {
-	unlock();
+  unlock();
 }
 ```
 
@@ -151,7 +151,7 @@ if (user && user.verified && !user.banned && plan !== "free") {
 const entitled = user?.verified && !user.banned && plan !== "free";
 
 if (entitled) {
-	unlock();
+  unlock();
 }
 ```
 
@@ -162,7 +162,7 @@ Introduce a variable when its name explains a domain concept, makes a non-obviou
 ```ts
 // ❌ The same calculated time decides whether to retry and when; nothing says so.
 if (now + delayMs >= expiresAt) {
-	return;
+  return;
 }
 
 await schedule(now + delayMs);
@@ -173,7 +173,7 @@ await schedule(now + delayMs);
 const retryAt = now + delayMs;
 
 if (retryAt >= expiresAt) {
-	return;
+  return;
 }
 
 await schedule(retryAt);
