@@ -46,7 +46,7 @@ Start from [assets/SKILL.template.md](assets/SKILL.template.md). Keep the body s
 
 - **Open with one sentence** that states the goal the agent is working toward.
 - **Give every rule its reason.** An agent that knows why a rule exists applies it sensibly to cases the rule didn't foresee. A bare "NEVER" in capitals gets followed rigidly or not at all.
-- **Show, don't only tell.** A short ❌/✅ pair with a one-line comment saying what is wrong and what is right teaches more than a paragraph.
+- **Show, don't only tell.** A short ❌/✅ pair with a one-line comment saying what is wrong and what is right teaches more than a paragraph. Indent code in examples with two spaces, never tabs: GitHub and most Markdown viewers draw a tab eight characters wide.
 - **Say when a rule doesn't apply.** Name the exceptions and who decides (the project, the user).
 - **Leave out what any capable agent already knows.** Every line costs context on every use. Keep what is specific to this user, their projects or their taste.
 - **Use the imperative,** addressed to the agent: "Read the diff first", not "The agent should read the diff".
