@@ -25,5 +25,3 @@ skills ~/.codex/skills
 
 link "$here/AGENTS.md" ~/.claude/CLAUDE.md
 link "$here/AGENTS.md" ~/.codex/AGENTS.md
-
-python3 "$here/configure-codex.py" "$HOME/.codex/config.toml" "$HOME/.codex/skills/.system"
