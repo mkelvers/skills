@@ -1,0 +1,3 @@
+interface:
+  display_name: "Code style"
+  short_description: "The user's code style for every language and project"
