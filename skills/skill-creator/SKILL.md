@@ -57,7 +57,7 @@ Start from [assets/SKILL.template.md](assets/SKILL.template.md). Keep the body s
 A simple skill is one `SKILL.md`. Add more only for a concrete reason:
 
 - **`references/`** for detail the agent needs only sometimes, such as a long rule list or per-language notes. Link each file from `SKILL.md` with a line saying when to read it, and keep links one level deep (references don't point to more references).
-- **`scripts/`** for work that must be done exactly the same way every time, like validation or generating a file. Run every script yourself before finishing.
+- **`scripts/`** for work that must be done exactly the same way every time, like validation or generating a file. Write scripts in Python using only the standard library, so they run anywhere without installing anything, and run every script yourself before finishing.
 - **`assets/`** for files the skill copies into its output, such as templates.
 
 The user's own skills also carry `agents/openai.yaml`, which sets how the skill is shown in Codex:
@@ -72,7 +72,7 @@ Quote the values, and keep `short_description` between 25 and 64 characters.
 
 ## 5. Put it in place
 
-- **Personal skill:** if the user keeps a skills repository (for example `~/.config/agents/skills/`, linked into each agent by a `link.sh` script), create the folder there and run the link script. Otherwise use `~/.claude/skills/<name>/` for Claude Code and `~/.agents/skills/<name>/` for Codex.
+- **Personal skill:** if the user keeps a skills repository (for example `~/.config/agents/skills/`, linked into each agent by a link script), create the folder there and run the link script. Otherwise use `~/.claude/skills/<name>/` for Claude Code and `~/.agents/skills/<name>/` for Codex.
 - **Project skill:** `.claude/skills/<name>/` for Claude Code, `.agents/skills/<name>/` for Codex.
 
 Check before writing that no skill with the same name already exists there. Then validate the skill:
