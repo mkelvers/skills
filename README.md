@@ -5,7 +5,7 @@ Shared agent skills for code style (including TypeScript), debugging, design, wr
 Keep the checkout at a stable path. To link all skills and the shared `AGENTS.md` into Codex and Claude Code, run this from the repository root:
 
 ```sh
-sh link.sh
+python3 link.py
 ```
 
 The script refreshes symlinks and removes broken skill links into this checkout. It leaves regular files and directories in place and reports those paths as skipped.
