@@ -74,7 +74,18 @@ Two failure modes sit on either side. **Function sprawl** is dozens of small mod
 - Every method uses the instance. Logic that doesn't belongs outside the class or inline.
 - Keep state private (`#field`, or the project's convention) and expose methods, not fields to mutate.
 - Keep the public surface small. A class whose many public methods each do a little is shallow: callers learn a lot and gain little.
-- Constructors only assign. Async setup goes in a named creation method (`await Index.open(path)`), so a half-built object is never in use.
+- Constructors validate their input and assign. Async setup goes in a named creation method, with the constructor made private, so a half-built object is never in use:
+
+  ```ts
+  export class Manifest {
+      private constructor(private readonly entries: readonly Entry[]) {}
+
+      static async load(path: string): Promise<Manifest> {
+          return new Manifest(await readEntries(path));
+      }
+  }
+  ```
+
 - Prefer composition. Inherit for a true is-a, or when a framework requires it (custom errors, framework base classes).
 - One main class per file. A small private class that only that file uses can sit beside it.
 
@@ -155,6 +166,10 @@ export function getOrder(id: string) {
 A function earns its place when it holds real logic, owns a contract callers depend on (validation, retries, translating errors), or is a boundary the architecture defines, such as a repository, port or adapter. A designed layer is not a wrapper, even when one method happens to forward.
 
 ## Abstractions
+
+Before writing an API other code will depend on, settle what the caller provides, what it gets back, what can fail, what state exists and who owns it. Then build the smallest surface that covers that. Every exported member is a promise you'll have to keep, so don't export something just because the implementation already has it.
+
+An interface needs more than one real implementation, or callers that must depend on the contract on its own. A lone `PaymentServiceImpl` behind a `PaymentService` interface is two names to maintain for nothing; write the class. When several providers really share a contract, the interface names the capability they share.
 
 - Wait for the third similar case before extracting a shared abstraction. Duplication is cheaper to undo than the wrong abstraction, which every later change has to fight.
 - An abstraction must hide more than it costs to learn. If callers still need to know how it works inside, it isn't helping.
