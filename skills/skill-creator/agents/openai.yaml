@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill creator"
+  short_description: "Start a new skill from a short interview"
