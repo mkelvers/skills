@@ -1,6 +1,6 @@
 # Breaking UI
 
-An adversarial skill. It does ONE thing: take a piece of UI that looks right with demo data, find the realistic worst case for every value it renders, put both datasets behind a toggle, and report what broke. It does not redesign the component (that's `prototype.md`), critique its taste (that's `emil-design-eng.md`), or review its motion (that's `review-animations.md`).
+An adversarial skill. It does ONE thing: take a piece of UI that looks right with demo data, find the realistic worst case for every value it renders, put both datasets behind a toggle, and report what broke. It does not redesign the component (that's `prototype.md`), critique its taste (that's `emil-design-eng.md`), or review its motion (that's `animation-rules.md`).
 
 ## Operating Posture
 
