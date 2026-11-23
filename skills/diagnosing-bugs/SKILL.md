@@ -23,7 +23,7 @@ Pick the cheapest signal that reaches the bug:
 6. A small harness that calls the suspect function with stubbed dependencies.
 7. A fuzz loop over many random inputs, for "sometimes the output is wrong".
 8. A `git bisect run` script, when the bug appeared between two known versions.
-9. Last resort: a script that walks the user through manual steps, [scripts/hitl-loop.template.sh](scripts/hitl-loop.template.sh).
+9. Last resort: a script that walks the user through manual steps, [scripts/hitl_loop.template.py](scripts/hitl_loop.template.py).
 
 Then improve it. Make it faster by narrowing scope and caching setup. Make it sharper by asserting the user's specific symptom, not "didn't crash". Make it deterministic by pinning time, seeding randomness and freezing the network. For a bug that only happens sometimes, raise the reproduction rate instead of waiting for a clean repro: run the trigger a hundred times, add load, narrow timing windows. A bug that fails half the time can be debugged; one that fails once in a hundred can't.
 
