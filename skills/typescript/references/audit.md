@@ -3,15 +3,7 @@
 
 Improve the system, not its cosmetic score. Establish trustworthy baselines, gather evidence with several independent signals, prioritize change hotspots, and refactor in small verified slices. Treat tool output as leads to investigate, never as permission to delete or abstract code.
 
-## Compose the installed disciplines
-
-Read and apply these skills when their concern arises:
-
-- `diagnosing-bugs`: reproduce and instrument intricate bugs or performance regressions.
-
-Judge module boundaries and testability directly. Review the resulting diff against repository standards and the requested scope.
-
-Do not invoke every skill mechanically. Select the smallest set that matches the evidence.
+When an audit turns up a real bug or a performance regression, switch to the diagnosing-bugs skill for that issue before continuing.
 
 ## 1. Establish the contract
 
@@ -25,7 +17,7 @@ Record the baseline commands and results. A refactor is not proven safe without 
 
 ## 2. Build an evidence map
 
-Run the cheapest relevant signals first. Read [audit-tooling.md](audit-tooling.md) for command selection and interpretation.
+Run the cheapest relevant signals first. `audit-tooling.md` has the commands and how to read their output.
 
 Collect evidence for:
 
@@ -49,7 +41,7 @@ Never present raw analyzer output as a final diagnosis.
 
 ## 3. Inspect semantics and architecture
 
-Apply the principles in `SKILL.md` (SOLID, DRY, YAGNI, KISS) as questions, not rules.
+Treat SOLID, DRY, YAGNI and KISS as questions, not rules.
 
 For every serious candidate:
 

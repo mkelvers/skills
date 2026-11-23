@@ -1,37 +1,54 @@
 ---
 name: typescript
-description: Guides writing, refactoring, reviewing, and auditing TypeScript code. Use when working on TypeScript or Node.js code, or when cleaning up or auditing a TypeScript repository.
+description: Guides the design of TypeScript code; use when writing, reviewing or auditing TypeScript or Node.js, or designing its types, APIs, errors or docs.
 ---
 
 # TypeScript
 
-Write the smallest clear design that models the domain, enforces its invariants, and validates its boundaries. Types, names, and module structure should explain the code. Every abstraction earns its place.
+Write the smallest design that models the domain, keeps its invariants true, and checks everything that comes from outside. A reader should understand the code from its types, names and module structure, and every abstraction should be there because something would be lost without it.
 
-## Rules
+The project's conventions win: its validator, its error model, its connection handling, its rules on assertions. For layout, naming, helpers and classes versus functions, use the [code-style skill](../code-style/SKILL.md). This skill covers what is particular to TypeScript.
 
-- Name each new layer's responsibility and consumer. If deleting it loses nothing but indirection, don't add it.
-- Validate at trust boundaries (HTTP bodies, env vars, JSON, queues, webhooks, third-party APIs, CLI input). Accept `unknown` where the contract genuinely allows it. Narrow or validate before relying on its shape. Prefer the project's existing validator, including Zod where adopted, and derive runtime-data types from schemas. Avoid `any` for unchecked data.
-- Use a concrete function or class when callers need only one implementation. Introduce a separate contract when callers depend on it independently or real implementations share it.
-- Start generics concrete. Add one only to preserve a real relationship between types.
-- Use classes for state, lifecycle, or invariants. Otherwise write functions. Constructors do no async work. Inherit only for a true is-a.
-- Give database connections and transactions an explicit owner. Follow the project's existing connection model. A shared connection, a transaction-scoped client, or an injected pool can each serve a real lifetime or isolation requirement.
-- Don't hide missing data with a fallback. `anime.title ?? "Unknown"` on a required field is a bug. Throw, or set defaults once in the schema or config parsing.
-- Use TSDoc where exported APIs have assumptions, errors, side effects, or lifecycle requirements that their types do not express. Follow stricter local documentation rules.
-- Style (control flow, naming, formatting, grouping) follows the `code-style` skill.
+## The rules
 
-Treat SOLID, DRY, YAGNI, KISS, and separation of concerns as questions that expose trade-offs, not as a score. Citing a principle doesn't justify a refactor. Remove duplicated knowledge (the same rule in two places), not code that merely looks similar. Delete speculative options and abstractions for hypothetical consumers. Fewer lines is not simpler, and indirection is not architecture.
+**Check data at the boundary, then trust it.** Request bodies, environment variables, JSON, queue messages, webhooks and third-party responses are `unknown` until a schema or a check proves their shape. Parse them once where they enter, with the project's validator, and derive the type from the schema. After that, business logic works with real types and never re-checks. A cast at the boundary proves nothing, because the sender decides what arrives.
 
-Prefer checked assignments, inference, and narrowing. Where project policy allows, a localized assertion may express an independently established invariant the compiler cannot see. An assertion does no runtime validation. Follow stricter local rules, including a project-wide assertion ban.
+**Let the compiler see the evidence.** Prefer inference, narrowing and annotated assignments to assertions. An assertion does no checking at runtime; it only stops the compiler from telling you that you're wrong. Where the project allows one, limit it to an invariant established elsewhere that the compiler can't follow.
+
+**Make invalid states impossible to write.** Model a result as a discriminated union, where each state carries only its own fields, rather than one object with many optional ones. A field that must exist after creation should be required by construction, not nullable "just in case".
+
+**Add a layer only when it does a job.** Before adding an interface, wrapper, factory or generic, name what it owns and who depends on it. One implementation needs no separate interface. A generic needs a real relationship between types. If deleting the layer loses nothing but indirection, don't add it.
+
+**Give owned resources an owner.** Connections, transactions, timers and subscriptions belong to something with a clear lifetime that also releases them. Follow the project's model for this.
+
+**Document what the types can't say.** Assumptions, side effects, failure modes, ownership and lifecycle go in TSDoc on exported code. A doc comment that only repeats the name is noise.
+
+Treat principles like SOLID, DRY and YAGNI as questions that expose trade-offs, not as a score. Citing one doesn't justify a refactor. Remove duplicated *knowledge*, the same rule in two places, not code that merely looks alike.
 
 ## References
 
-Read the file that matches the work, in `references/`.
+Read the one that matches the work.
 
-- `api-design.md`: public API shape, abstractions, functions vs classes, constructors, inheritance.
-- `types-and-interfaces.md`: interfaces, type aliases, schemas, `unknown`, generics, nullability.
-- `documentation.md`: TSDoc.
-- `errors-and-results.md`: throwing, causes, result types, defaults.
-- `review.md`: reviewing a diff.
-- `audit.md`, then `audit-tooling.md` as needed: auditing or cleaning up an existing repo.
+| Working on | Read |
+| --- | --- |
+| A public API, abstractions, interfaces, constructors, inheritance | [api-design.md](references/api-design.md) |
+| Types, unions, schemas, `unknown`, generics, nullability | [types.md](references/types.md) |
+| Errors, causes, result types, defaults | [errors.md](references/errors.md) |
+| TSDoc and doc comments | [documentation.md](references/documentation.md) |
+| Auditing or cleaning up a whole repository | [audit.md](references/audit.md), with [audit-tooling.md](references/audit-tooling.md) for the commands |
 
-Before finishing, ask whether someone reading only the public types and docs would know how to use this, and whether any part exists only because it looked like good architecture.
+## Reviewing a diff
+
+Flag only what you can point at, with `file:line`, the rule it breaks and the fix. Look in particular for:
+
+- layers with no job: forwarding wrappers, `Foo` with a lone `FooImpl`, factories where `new` would do, generics with one use;
+- unchecked input: casts from parsed JSON, an interface duplicating a schema, data used before validation;
+- hidden invalid state: defaults on required data, swallowed errors, lost `cause`, thrown strings;
+- resources with no clear owner or lifetime;
+- exported contracts whose obligations aren't documented.
+
+## Before you finish
+
+- Could someone reading only the public types and docs use this correctly?
+- Does any part exist only because it looked like good architecture?
+- Does every external value pass a check before the code relies on its shape?

@@ -1,107 +1,52 @@
 # Documentation
 
-Documentation describes contracts, intent, constraints, and behavior.
+Doc comments let callers use code without reading its implementation. Write them for what the signature can't say.
 
-It should make the codebase easier to use without requiring callers to read
-the implementation.
+## What to document
 
-## Default rule
-
-Use TSDoc when exported functions, types, classes, methods, or configuration have requirements the signature does not communicate. Document meaningful assumptions, guarantees, effects, ownership, and failures. Follow stricter project documentation rules. Explain non-obvious internal decisions where they matter.
-
-Bad:
+Add TSDoc to exported functions, classes, methods, types and configuration when they have requirements the types don't show: assumptions about input, guarantees about output, side effects, ownership, lifecycle, and failures callers should handle differently. Follow the project's own documentation rules where it has stricter ones.
 
 ```ts
-/**
- * Gets the anime.
- */
-function getAnime() {}
+// ❌ Restates the name; tells the caller nothing.
+/** Gets the order. */
+async function order(id: string): Promise<Order> {}
 ```
 
-Good:
-
 ```ts
+// ✅ Says what the types can't: which identifier, and what happens when it's missing.
 /**
- * Retrieves the canonical anime record for the provided AniList identifier.
+ * Loads an order by its public order number.
  *
- * @param id AniList media identifier.
- * @returns The matching anime.
- *
- * @throws {@link AnimeNotFoundError}
- * When no anime exists for the provided identifier.
+ * @throws {@link OrderNotFoundError} When no order has that number.
  */
-async function getAnime(id: number): Promise<Anime> {
-  // ...
-}
+async function order(number: string): Promise<Order> {}
 ```
 
 ## Interfaces
 
-Document why the contract exists and what implementations must guarantee.
+Say why the contract exists and what every implementation must guarantee. That is the part an implementer can't infer.
 
 ```ts
 /**
- * Provides metadata for anime from an external metadata source.
+ * Charges customers through an external payment provider.
  *
- * Implementations must return normalized domain objects rather than
- * provider-specific response structures.
+ * Implementations return a `Receipt` for every successful charge and never
+ * retry on their own; the caller decides whether a failure is retried.
  */
-export interface MetadataProvider {
-  /**
-   * Retrieves metadata for an anime.
-   *
-   * @param id Provider-specific media identifier.
-   * @returns Normalized anime metadata.
-   *
-   * @throws {@link MetadataRequestError}
-   * When the provider cannot be reached or returns an invalid response.
-   */
-  getAnime(id: string): Promise<AnimeMetadata>;
+export interface PaymentProvider {
+	charge(order: Order): Promise<Receipt>;
 }
 ```
 
 ## Examples
 
-Add examples where the intended usage is not immediately obvious.
+Add an `@example` where the intended use isn't obvious from the signature: lifecycles, builders, schedulers, overloaded functions, configuration objects, resource ownership. Skip them on trivial functions, where they only add length.
 
-Do not add examples to every trivial function.
+## Describe behaviour, not the algorithm
 
-Examples are particularly useful for:
+Documentation should still be true after the implementation changes.
 
-- lifecycle APIs
-- builders
-- schedulers
-- resource ownership
-- generic utilities
-- overloaded APIs
-- configuration objects
-- domain workflows
-
-## Error documentation
-
-If callers are expected to respond differently to different failures,
-document those failures.
-
-```ts
-/**
- * Imports anime from an external file.
- *
- * @throws {@link UnsupportedImportFormatError}
- * When the provided format is not supported.
- *
- * @throws {@link InvalidImportDataError}
- * When the file does not match the expected schema.
- */
+```text
+❌ Loops through the array and pushes each value into another array.
+✅ Groups orders by customer, keeping their original order within each group.
 ```
-
-## Documentation should survive implementation changes
-
-Prefer documenting semantics rather than internal algorithms.
-
-Bad:
-
-> Loops through the array and pushes each value into another array.
-
-Good:
-
-> Groups episodes by canonical season while preserving their original order.
