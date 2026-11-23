@@ -5,62 +5,46 @@ description: Builds, restyles and reviews web UI, landing pages, Figma files and
 
 # Design
 
-Make interfaces that are clear at a glance and feel considered in every detail, in the project's own visual language. This file routes; the references hold the knowledge. Read each reference you pick in full, because their rules depend on each other and skimming loses the reasons.
+Make interfaces that are clear at a glance, consistent in every detail, and look like the person asked for them, not like a generated template.
 
-The project's stack and design tokens come first. Match its framework, CSS conventions, components and existing easing or spacing tokens before adding new ones, so the result looks like it belongs. Check the result in a browser; most design problems are only visible when rendered.
+Good-looking UI is mostly learnable: a clear hierarchy, a small system of sizes and colours used consistently, and the details most pages skip. Taste is the rest, and it belongs to the person you're designing for. You get it from them through examples, not by guessing. Guessing intent and filling the gap with decoration is how designs get rejected.
 
-## Where to start
+In an existing product, its stack, components and tokens come first. A screen that looks great but doesn't match the rest of the product looks broken.
 
-| The task | Read first |
+## How to work
+
+1. **Understand the intent.** What should a visitor understand and do? Ask only what changes the design, offer a suggestion with each question, and confirm your summary before building.
+2. **Get the taste from examples.** Ask for two or three sites or screenshots they like. If they have none, build two or three distinct directions behind a switcher ([prototype.md](references/prototype.md)) and let them pick.
+3. **Plan the system before code:** colours, type, spacing, radius and layout. Check the plan against the generated defaults in [visual.md](references/visual.md) and change anything that would fit any similar page.
+4. **Build section by section** on that system, with real content.
+5. **Look at it.** Render it, screenshot it at desktop and phone widths, critique it, and remove one thing. Most design problems are invisible in code.
+
+## References
+
+[visual.md](references/visual.md) holds the core of this skill. Read it in full for any UI work; the others are for specific jobs.
+
+| The task | Read |
 | --- | --- |
-| A new page, a hero or a redesign | [quiet-ui.md](references/quiet-ui.md), then the screenshots indexed in [images/README.md](references/images/README.md) |
-| A landing page or marketing site | [landing-page.md](references/landing-page.md), after quiet-ui.md |
+| Any page, screen or component | [visual.md](references/visual.md) |
+| A landing page or marketing site | [landing-page.md](references/landing-page.md), after visual.md |
+| A component library or design system | [components.md](references/components.md) |
+| Accessibility, forms, focus, or a code review of UI | [web-interface-guidelines.md](references/web-interface-guidelines.md) |
+| Stress-testing UI with worst-case data | [break-ui.md](references/break-ui.md), with [break-ui-catalog.md](references/break-ui-catalog.md) |
+| Showing several versions to choose from | [prototype.md](references/prototype.md), with [prototype-picker.md](references/prototype-picker.md) |
+| A web app that should feel native on a phone | [mobile-native.md](references/mobile-native.md) |
 | Anything in Figma | [figma.md](references/figma.md) |
-| Any animation | [animation-rules.md](references/animation-rules.md), then the matching motion file below |
-| Any other UI work | [emil-design-eng.md](references/emil-design-eng.md) |
-
-When two references disagree, [quiet-ui.md](references/quiet-ui.md) wins over [frontend-design.md](references/frontend-design.md): understand what the page is for before giving it a distinctive look.
-
-## All references
-
-**Intent and look**
-
-- [quiet-ui.md](references/quiet-ui.md): understand intent first, one primary action per screen, familiar structure.
-- [frontend-design.md](references/frontend-design.md): a distinctive direction in typography, palette and layout.
-- [design-principles.md](references/design-principles.md): hierarchy, accessibility, composition and tokens that hold up as a system grows.
-- [design-craft.md](references/design-craft.md): telling good design from generic, with a review checklist.
-
-**Pages and tools**
-
-- [landing-page.md](references/landing-page.md): intake, structure, copy, SEO and visual rules for landing pages.
-- [figma.md](references/figma.md): variables, text styles, auto layout, components and tokens in Figma.
-
-**Quality and review**
-
-- [web-interface-guidelines.md](references/web-interface-guidelines.md): accessibility, forms, focus and semantics, reported as `file:line`.
-- [break-ui.md](references/break-ui.md) with [break-ui-catalog.md](references/break-ui-catalog.md): stress-test UI with worst-case data.
-- [mobile-native.md](references/mobile-native.md): make a web app feel native on a phone.
-- [prototype.md](references/prototype.md) with [prototype-picker.md](references/prototype-picker.md): build several versions behind a switcher to compare.
-
-**Motion**
-
-- [animation-rules.md](references/animation-rules.md): the short list of rules agents break most. Read for any animation work.
-- [emil-design-eng.md](references/emil-design-eng.md): the reasoning behind those rules.
-- [animate.md](references/animate.md) with [animate-recipes.md](references/animate-recipes.md): build an animation.
-- [review-animations.md](references/review-animations.md) with [review-animations-standards.md](references/review-animations-standards.md): review animation code.
-- [improve-animations.md](references/improve-animations.md) with [improve-animations-audit.md](references/improve-animations-audit.md) and [improve-animations-plan-template.md](references/improve-animations-plan-template.md): audit motion and plan fixes.
-- [find-animation-opportunities.md](references/find-animation-opportunities.md): where motion helps and where it doesn't.
-- [apple-design.md](references/apple-design.md): gestures, springs, drag, sheets and interruptible motion.
-- [animation-performance.md](references/animation-performance.md) with [performance-cheatsheet.md](references/performance-cheatsheet.md): dropped frames and `will-change`.
-- [animation-vocabulary.md](references/animation-vocabulary.md): the precise names for effects.
+| Any animation | [animation-rules.md](references/animation-rules.md), then [animate-recipes.md](references/animate-recipes.md) for code |
+| Animation reasoning, springs, interruptible motion | [emil-design-eng.md](references/emil-design-eng.md) |
+| Gestures, drag, sheets and physical motion | [apple-design.md](references/apple-design.md) |
 
 ## Before you finish
 
-- The result uses the project's components and tokens, not new one-offs.
+- The intent is clear in five seconds, with one primary action per screen.
+- Every value comes from the planned system or the product's tokens.
+- Nothing on the page is one of the generated defaults unless the brief asked for it.
+- Hover, focus, loading, empty and error states exist.
 - You looked at it rendered, at desktop and phone widths.
-- Every animation follows animation-rules.md and respects reduced motion.
-- Interactive elements work with a keyboard and have accessible names.
 
 ## Sources
 
-Merged from Emil Kowalski's skills (MIT, `LICENSE`), `frontend-design` from anthropics/skills (Apache-2.0, `LICENSE-frontend-design.txt`) and Vercel's Web Interface Guidelines (MIT, `LICENSE-vercel.txt`). `design-principles.md` is reworked from the HeroUI v3 design principles page. `landing-page.md` and `figma.md` were separate skills before.
+Built on Emil Kowalski's design-engineering skills (MIT, `LICENSE`), Anthropic's `frontend-design` skill (Apache-2.0, `LICENSE-frontend-design.txt`) and Vercel's Web Interface Guidelines (MIT, `LICENSE-vercel.txt`). `components.md` is reworked from the HeroUI v3 design principles. `visual.md` also draws on *Refactoring UI*, Matthew Butterick's *Practical Typography* and Paul Bakaus's Impeccable.
