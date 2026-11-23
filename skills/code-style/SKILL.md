@@ -1,6 +1,6 @@
 ---
 name: code-style
-description: The user's code style for writing, editing, refactoring and reviewing code in any language and any codebase, from their own projects to a company's. Use it for every change that touches code, even a one-line fix, and when reviewing someone else's diff. Covers formatting, control flow, naming, classes and functions, error handling, markup and lint diagnostics, and how to fit all of it into a project's existing architecture.
+description: Applies the user's code style; use whenever writing, editing, reviewing or testing code, or writing code documentation, in any codebase.
 ---
 
 # Code style
@@ -31,7 +31,7 @@ The question to ask of every change: *would someone new to this codebase underst
 
 Run the project's formatter, linter and type checker through its own scripts, and fix what they report in the code. A diagnostic is usually right, and the fix usually improves the code.
 
-A suppression comment (`eslint-disable-next-line`, `@ts-expect-error`, `// biome-ignore`) is a last resort. It is legitimate when the rule genuinely misfires on correct code, for example a framework that requires a name the rule bans. When you use one, disable only the one rule on the one line, and give the reason in the comment. Never use one to make a type error or a real bug go away, and never where the project forbids them.
+A suppression comment (`eslint-disable-next-line`, `@ts-expect-error`, `// biome-ignore`) is a last resort. It is legitimate when the rule genuinely misfires on correct code, for example a framework that requires a name the rule bans. When you use one, disable only the one rule on the one line, give the reason in the comment, and mention it to the user when you report the work, so it is a visible decision rather than a quiet one. Never use one to make a type error or a real bug go away, and never where the project forbids them.
 
 Agents reach for suppressions to finish faster. These are the excuses to catch yourself on:
 
