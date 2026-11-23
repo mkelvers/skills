@@ -1,6 +1,6 @@
 # Animation Performance
 
-A diagnostic skill. It does ONE thing: make motion land every frame. It does not pick easing or duration (that's `animate`), judge whether the motion should exist (that's `review-animations`). The question here is never "does it look right?" but "does each frame finish in time?".
+A diagnostic skill. It does ONE thing: make motion land every frame. It does not pick easing or duration (that's `animate.md`), judge whether the motion should exist (that's `review-animations.md`). The question here is never "does it look right?" but "does each frame finish in time?".
 
 ## Why This Matters
 
