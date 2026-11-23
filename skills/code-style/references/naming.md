@@ -1,100 +1,68 @@
 # Naming
 
-A name has one job: let a reader who doesn't have the file open recognise what the thing is at the call site. A doc comment carries the detail. The name only has to be true and recognisable.
+A name is read far more often than it is written, and almost always at the call site, by someone who doesn't have the definition open. Write for that reader. Doc comments carry the detail; the name only has to be true and recognisable.
 
-Follow the project's naming *conventions* (casing, file names, prefixes its framework requires, its domain vocabulary). Apply the quality rules below to every name you write inside those conventions.
+Follow the project's conventions: casing, file names, prefixes its framework requires, its domain vocabulary. Within those, apply the rules below.
 
-The user judges names by instinct ("this ticks wrong"). The rules below capture what that instinct rejects and accepts. When a name passes every rule and still reads badly at the call site, it is still wrong.
+## The call-site test
 
-## The test
+Read the call with its import or owner in view, and ask three things:
 
-Read the call site with its import or owner in view.
+- Would you say it shorter out loud? Then shorten it.
+- Could someone without the file open guess what it does? If not, it is too short.
+- Does it read like a sentence? Then the function probably does too much or lives in the wrong place. Fix that rather than growing the name.
 
-- If you would say it shorter out loud, shorten it.
-- If someone without the file open couldn't guess what it does, it is too short.
-- If it reads as a sentence, the function does too much or lives in the wrong place. Fix that instead of growing the name.
+The user judges names partly by instinct. A name can pass every rule below and still read badly at the call site, and then it is still wrong.
 
-## Length
+## Short, with the context in the owner
 
-**Default.** Aim for one or two words; more than three is rare. There is no hard limit, but a name that needs four or more words is describing a responsibility that belongs to an owner (a module, a class, an object), or a function doing two jobs.
+Aim for one or two words. More than three is rare, and usually means the name is carrying context that belongs to something else.
 
-❌ **Don't**
-
-```ts
-calculateShippingCostForOrder(order);
-maximumRetryDelayInMilliseconds;
-getUserNotificationPreferences(userId);
-```
-
-✅ **Do**
+Leave out what the folder, file or owner already says. Inside `billing/` it is `charge()`, not `chargeBilling()`; on a `Connection` it is `close()`, not `closeConnection()`. When dropping the context makes a bare call unclear, put the context in an owner rather than back in the name.
 
 ```ts
-// The owner carries "shipping", so the method only names the calculation.
-shipping.cost(order);
-maxDelayMs;
-preferences.notifications(userId);
-```
-
-Names an external contract fixes are exempt: framework-required exports, protocol fields, database columns, third-party interface members.
-
-## Don't repeat the context
-
-**Default.** A value or function doesn't repeat a word its folder, file or owner already says. Inside `billing/`, it is `charge()`, not `chargeBilling()`. On a `Connection` class it is `close()`, not `closeConnection()`.
-
-Types and classes keep their full name, because they travel without their file: `PaymentError` stays `PaymentError` wherever it is imported.
-
-## Put the context in an owner
-
-When dropping the context makes a bare call unclear, give the call an owner instead of a longer name: a class instance, a module namespace import, or an exported object of related functions, whichever the project already uses. The call site reads `owner.verb()`.
-
-❌ **Don't**
-
-```ts
+// ❌ Every name repeats "cache", because nothing else says it.
 import { closeCache, flushCache } from "./cache";
 
 await flushCache();
 await closeCache();
 ```
 
-✅ **Do**
-
 ```ts
+// ✅ The owner says it once, and each method says only what it does.
 import { cache } from "./cache";
 
-// Short names stay clear because "cache." is part of every call.
 await cache.flush();
 await cache.close();
 ```
 
-In a project that already exports plain functions and imports them by name, keep that pattern and pick names that are clear bare (`flush` alone is not; `flushCache` is acceptable there). Don't restructure a module just to shorten its names.
+Types and classes keep their full name (`PaymentError`), because they travel without their file. In a project that imports plain functions by name, keep that pattern and choose names that stand alone; `flushCache` is fine there. Don't restructure a module just to shorten its names.
 
-## Words to avoid
+## Words that say nothing
 
-**Default**, unless the project's conventions, a framework or an external contract use the word.
+- **Abbreviations made by dropping letters:** `cfg`, `ctx`, `err`, `idx`, `msg`, `btn`, `val`, `tmp`. Write the word. Abbreviations that are the thing's normal name (`id`, `url`, `html`, `api`) are fine, and so is a one-letter name in a loop a few lines long.
+- **Filler at the end:** `data`, `info`, `list`, `map`, `helper`, `util`, `manager`, `impl`, `base`. `userList` is `users`; `configManager` names nothing.
+- **Type or mechanism suffixes:** `searchUrl`, `fetchAsync`, `saveIfNeeded`, `getXFor`. In `href={search(query)}`, the attribute already says it's a link.
+- **`handle` at the start:** `handleClick` says when a function runs, not what it does. Name the action: `submit`, `toggle`, `dismiss`. Many React codebases use `handleX` by convention; there, follow the project.
 
-- **Abbreviations made by dropping letters:** `arr`, `btn`, `cb`, `cfg`, `ctx`, `err`, `idx`, `msg`, `num`, `obj`, `str`, `tmp`, `val`. Write the word. Abbreviations that are the normal name of the thing (`id`, `url`, `html`, `api`) are fine, and so is a one-letter name in a loop of a few lines.
-- **Filler as the last word:** `async`, `base`, `data`, `fn`, `helper(s)`, `impl`, `info`, `later`, `list`, `manager`, `map`, `promise`, `util(s)`. `userList` is `users`. `configManager` names nothing.
-- **`handle` as the first word.** `handleClick` says when it runs, not what it does. Name the action: `submit`, `toggle`, `dismiss`. Many React codebases use `handleX` by convention; there, follow the project.
-- **Type or mechanism suffixes:** `searchUrl`, `searchHref`, `searchWith`, `getXFor`, `fetchAsync`, `saveIfNeeded`. `href={search({ query })}` already says it is a link. Name the concept: `search`.
+## Name by role, not by type
 
-## Name by role, not type
+Name a variable for what it does in this code. Use `sender` and `recipient`, not `user1` and `user2`; `retryAt`, not `timestamp`. When the type is weak (a `string`, a `number`), the name has to carry the meaning: `orderId`, `timeoutMs`.
 
-Name a variable or parameter for what it does in this code, not for its type. `recipient` and `sender`, not `user1` and `user2`; `retryAt`, not `timestamp`. When the type is weak (a `string`, a `number`, an `id`), the name has to carry the meaning: `orderId`, `timeoutMs`.
+## Verbs, nouns and questions
 
-## Verbs, nouns and predicates
-
-- Functions that act are verbs: `save`, `refresh`, `dismiss`.
-- Values and getters are nouns: `orders`, `retryAt`, `invoice.total`.
-- A pair of mutating and non-mutating operations is named so the difference shows: `sort()` changes in place, `sorted()` returns a copy.
-- Booleans read as a state or an answered question: `ready`, `entitled`, `order.paid`. Use `is`/`has` only when the bare word would be ambiguous.
-- A function that starts something and hands back how to undo it is named for what it starts: `const stop = watcher.start();` reads correctly. A function called `stop()` that starts something reads backwards.
+- Functions with effects are verbs: `save`, `refresh`, `dismiss`.
+- Values and getters without effects are nouns: `orders`, `retryAt`, `invoice.total`.
+- When an operation exists in both forms, the names show which one changes things: `sort()` sorts in place, `sorted()` returns a copy.
+- Booleans read as a state or an answered question: `ready`, `entitled`, `order.paid`. Add `is` or `has` only when the bare word is ambiguous.
+- A function that starts something and returns how to undo it is named for what it starts: `const stop = watcher.start()`.
 
 ## Keep names true
 
-Never shorten a name into a word that means something else. `valid` hides what was checked. When several kinds of validity sit in the same function, `credentialsValid` is the right length.
+Never shorten a name into a word that means something else. `valid` hides what was checked; when several kinds of validity are in play, `credentialsValid` is the right length.
 
-Use the project's domain words, one word per meaning. If the project has a glossary, use its terms exactly, and add a new term there before using it. Never use two words for one concept or one word for two.
+Use one word per concept, and the project's word for it. If the project keeps a glossary, use its terms exactly.
 
-## Public names
+## Renaming public names
 
-Renaming an export is a contract change. Rename it only when you update every reference in the repository (including templates and doc-comment links), and keep strings outside the code unchanged: API schema ids, error codes sent to clients, database table and column names, serialized keys. A rename that changes a wire format is a migration, not a rename.
+Renaming an export changes a contract. Update every reference, including templates and doc-comment links. Keep strings that leave the code unchanged: API schema ids, error codes sent to clients, database tables and columns, serialized keys. A rename that changes a wire format is a migration, not a rename.

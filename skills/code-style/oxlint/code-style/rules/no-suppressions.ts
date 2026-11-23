@@ -1,6 +1,6 @@
 import { defineRule } from "@oxlint/plugins";
 
-/** [lint] Only negative type tests may expect a compiler error. */
+/** [SKILL.md] Only negative type tests may expect a compiler error. */
 export const noSuppressions = defineRule({
 	create: (context) => {
 		const test = /\.test\.[cm]?[jt]sx?$/u.test(context.filename);
@@ -28,7 +28,7 @@ export const noSuppressions = defineRule({
 					context.report({
 						loc: comment.loc,
 						message:
-							"Fix the code instead of suppressing lint, formatting, or type checks (code-style: lint).",
+							"Fix the code instead of suppressing lint, formatting, or type checks (code-style: SKILL.md).",
 					});
 				}
 			},
@@ -36,7 +36,7 @@ export const noSuppressions = defineRule({
 	},
 	meta: {
 		docs: {
-			description: "[lint] No lint, format, or type-check suppressions.",
+			description: "[SKILL.md] No lint, format, or type-check suppressions.",
 		},
 	},
 });

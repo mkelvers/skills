@@ -1,31 +1,28 @@
 # Errors and missing data
 
-Use the project's error model (exceptions, result types, error values). Within it, two things are never acceptable: dropping a failure, and pretending missing data is present. For TypeScript error and result design, see the TypeScript skill.
+Use the project's error model, whether that is exceptions, result types or error values. Inside it, two things are off the table: dropping a failure, and inventing data to cover a gap. Both let the program carry on in a wrong state, and both throw away the information someone will need to find the cause.
 
-## Don't swallow errors
+## Handle an error or let it travel
 
-**Always.** A handler that does nothing, only logs, or returns a placeholder lets the program carry on in a wrong state and throws away the cause.
-
-❌ **Don't**
+A handler that does nothing, only logs, or returns a placeholder is not handling anything. The caller believes the operation worked.
 
 ```ts
+// ❌ The write failed; the caller thinks it succeeded.
 try {
 	await orders.save(order);
 } catch (error) {
-	// The write failed; the caller thinks it worked.
 	console.error(error);
 }
 
+// ❌ Every failure, including bugs, becomes "no thumbnail".
 const thumbnail = await resize(image).catch(() => undefined);
 ```
 
-✅ **Do**
-
 ```ts
-// Let it propagate to code that can report it.
+// ✅ Let it propagate to code that can report it.
 await orders.save(order);
 
-// Or catch the failure you expect, and handle it on purpose.
+// ✅ Catch the failure you expect, handle it on purpose, and let the rest through.
 try {
 	return await resize(image);
 } catch (error) {
@@ -37,32 +34,29 @@ try {
 }
 ```
 
-Catch where the code can recover, translate or report: a request handler, a job runner, a UI action. Not in every function on the way. When translating, keep the original error as the cause.
+Catch where the code can do something useful: recover, translate the error for its caller, or report it. That is usually a boundary such as a request handler, a job runner or a UI action, not every function in between. When you translate an error, keep the original as its `cause`.
 
 ## Don't fake missing data
 
-**Always.** Don't cover a missing required value with placeholder text or a made-up value.
-
-❌ **Don't**
+A required value that is missing is a bug somewhere upstream. Covering it with placeholder text or a made-up number hides the bug and shows the user something false.
 
 ```ts
+// ❌ "Unknown" and 0 look like real data.
 const title = book.title ?? "Unknown";
 const year = book.year || 0;
 ```
 
-✅ **Do**
-
 ```ts
-// Required: its absence is a bug upstream, so fail where it is found.
+// ✅ Fail where the gap is found, with enough detail to trace it.
 if (!book.title) {
 	throw new Error(`Book ${book.id} has no title`);
 }
 ```
 
-A real default for an optional value is fine (`sort ?? "newest"`), ideally set once where input is parsed. In a UI, show the absence honestly: leave the field out or show an empty state.
+A real default for a value that is optional by design is fine (`sort ?? "newest"`); set it once, where input is parsed, rather than at every use. In a UI, show absence honestly by leaving the field out or showing an empty state.
 
-## Async
+## Asynchronous work
 
-Await what the operation depends on. Work started deliberately in the background handles its own failure and is marked as intentional (`void task()` in TypeScript).
+Await every promise the operation depends on. When you start work in the background on purpose, give it its own error handling and mark the choice as intentional (`void task()` in TypeScript). Many runtimes exit on an unhandled rejection.
 
-Remove `console.log`, `debugger` and `alert` before finishing; use the project's logger for diagnostics that should stay.
+Remove `console.log`, `debugger` and `alert` before finishing. Diagnostics that should stay go through the project's logger.
